@@ -25,3 +25,24 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.react-tel-input .form-control {
+  @apply !w-full p-1 !text-base;
+}
+
+.opt-container {
+  @apply flex justify-between gap-2;
+  color: black
+}
+.opt-container input {
+  @apply !mr-0 flex-1 py-5 outline-none;
+}
+
+#recaptcha-container>div>div{
+    max-width: 100% !important; 
+  
+}
+
+iframe{
+  max-width: 100%;
+}
