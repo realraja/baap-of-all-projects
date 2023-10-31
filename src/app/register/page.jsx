@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import PhoneInput from "react-phone-input-2";
-import { BsFillShieldLockFill, BsTelephoneFill } from "react-icons/bs";
+import { BsFillShieldLockFill } from "react-icons/bs";
 import { CgSpinner } from "react-icons/cg";
 import OtpInput from "otp-input-react";
 
@@ -12,6 +12,9 @@ import {toast} from "react-hot-toast";
 import { RecaptchaVerifier,signInWithPhoneNumber } from "firebase/auth";
 import {auth} from '@/firebase/index'
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Cookies from "js-cookie";
+import { GlobalContext } from "@/context";
 
 const initialForm = {
   name: "",
@@ -20,7 +23,7 @@ const initialForm = {
   Cpassword: "",
 };
 
-const page = () => {
+const page = ({searchParams}) => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [ph, setPh] = useState();
@@ -29,6 +32,9 @@ const page = () => {
   const [msg,setMsg] = useState('Please fill all required fields');
   const [otpData,setOtpData] = useState(null);
 
+  const {fetchAuthUserData} = useContext(GlobalContext);
+
+  console.log(searchParams)
   const router = useRouter();
   function isFormValid() {
 
@@ -97,7 +103,9 @@ const page = () => {
         if(data.success) {
             toast.success(data.message);
             setIsRegistered(true);
-            setLoading(false);
+            setLoading(false);            
+            Cookies.set("token", data.cookie,{ expires: 365 });
+            fetchAuthUserData()
             router.push('/')
         }else{
             toast.error(data.message);
@@ -112,7 +120,7 @@ const page = () => {
 
   return !isRegistered ? (
     <div className="w-80 md:w-[50%] m-auto bg-gray-700 my-10 p-10 space-y-5 rounded">
-        
+        <Link href={'/raja'}>raja</Link>
       <div className="text-2xl text-center -mt-5 text-rose-500">
         <h1>Register Now</h1>
       </div>

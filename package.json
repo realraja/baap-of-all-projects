@@ -9,8 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "axios": "^1.6.0",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "firebase": "^10.5.2",
+    "heroicons": "^2.0.18",
+    "heroicons-react": "^1.4.1",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^8.5.1",
     "mongoos": "^0.0.1-security",
     "mongoose": "^7.6.3",
     "next": "latest",
@@ -20,6 +27,7 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.11.0",
     "react-phone-input-2": "^2.15.1",
+    "react-spinners": "^0.13.8",
     "validator": "^13.11.0"
   },
   "devDependencies": {

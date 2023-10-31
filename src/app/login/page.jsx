@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { CgSpinner } from "react-icons/cg";
 import OtpInput from "otp-input-react";
 
@@ -10,6 +10,8 @@ import { toast } from "react-hot-toast";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "@/firebase/index";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { GlobalContext } from "@/context";
 
 const page = () => {
   const [otp, setOtp] = useState("");
@@ -21,6 +23,7 @@ const page = () => {
   const [otpData, setOtpData] = useState(null);
   const [phoneNo, setPhoneNo] = useState();
 
+  const {fetchAuthUserData} = useContext(GlobalContext);
   const router = useRouter();
 
   function isIdValid() {
@@ -77,7 +80,9 @@ const page = () => {
       console.log(data);
       if(data.success) {
         setLoading(false);
-        toast.success(data.message);
+        toast.success(data.message);            
+        Cookies.set("token", data.cookie,{ expires: 365 });
+        fetchAuthUserData()
         router.push("/");
       }else{
           toast.error(data.message);
@@ -101,7 +106,9 @@ const page = () => {
       console.log(data);
       if (data.success) {
         toast.success(data.message);
-        setLoading(false);
+        setLoading(false);            
+        Cookies.set("token", data.cookie,{ expires: 365 });
+        fetchAuthUserData();
         router.push("/");
       } else {
         toast.error(data.message);
@@ -240,8 +247,7 @@ const page = () => {
 
             <div className="flex flex-col  ">
               <button
-                className="disabled:opacity-50 flex bg-rose-500 self-center text-xl rounded px-5 py-2 hover:bg-rose-600"
-                disabled={!isIdValid()}
+                className="flex bg-rose-500 self-center text-xl rounded px-5 py-2 hover:bg-rose-600"
                 onClick={() => setIsPassword(true)}
               >
                 <span>Enter Password</span>

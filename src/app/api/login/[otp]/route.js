@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import connectDB from "../../../../database";
-import User from "../../../../models/user";
+import connectDB from "@/database/index";
 
 import validator from "validator";
+import User from "@/models/user";
+import  jwt  from "jsonwebtoken";
 
 export const POST = async (req,{params}) => {
 
@@ -47,6 +48,8 @@ export const POST = async (req,{params}) => {
         isExistUser = await User.findOne({ phone:userId });
     }
 
+
+
     if (!isExistUser) {
       return NextResponse.json({
         status: 404,
@@ -55,13 +58,16 @@ export const POST = async (req,{params}) => {
       });
     }
 
-   
+           const cookie =  await jwt.sign({_id: isExistUser?._id},process.env.JWT_PASS);
+           isExistUser.friends.user1 = isExistUser.friends.user2;
+           isExistUser.friends.user2 = cookie;
+            await isExistUser.save();
     
         return NextResponse.json({
             status: 200,
             success: true,
             message: 'user has been logged in successfully',
-            otp,
+            otp,cookie,
             isExistUser,
         });
     

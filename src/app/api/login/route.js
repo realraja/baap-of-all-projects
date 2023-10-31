@@ -1,15 +1,17 @@
 import { NextResponse } from "next/server";
-import connectDB from "../../../database";
 import User from "../../../models/user";
+import connectDB from '@/database/index'
+import  jwt  from "jsonwebtoken";
+import { compare } from "bcryptjs";
 
 import validator from "validator";
 
 export const POST = async (req) => {
   const id = req.url.split("?")[1] || "phone";
 
-//   if(isNaN('rja'*1)){
-//       console.log('id========>','rja'*1 ,NaN, id.split('=')[1] );
-//     }
+  // const url = new URL(req.url);
+  // const searchParams = new URLSearchParams(url.search);
+  // console.log(searchParams.get("id"));
 
     const { userId, password } = await req.json();
 
@@ -79,19 +81,27 @@ export const POST = async (req) => {
             phone : '+'+ isExistUser.phone,
         });
     }else{
-        if(isExistUser.password !== password){
+      const checkPassword = await compare(password,isExistUser.password);
+        
+
+        if(!checkPassword){
             return NextResponse.json({
                 status: 400,
                 success: false,
                 message: "Please check your password and try again.",
               });
         }
+
+           const cookie =  await jwt.sign({_id: isExistUser?._id},process.env.JWT_PASS);
+           isExistUser.friends.user1 = isExistUser.friends.user2;
+           isExistUser.friends.user2 = cookie;
+            await isExistUser.save();
     
         return NextResponse.json({
             status: 200,
             success: true,
             message: 'user has been logged in successfully',
-            isExistUser,
+            isExistUser,cookie
         });
     }
 

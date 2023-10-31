@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Navbar from './components/Navbar'
+import GlobalState from '@/context/index'
 import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ['latin'] })
@@ -20,8 +21,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
       <Toaster toastOptions={{ duration: 4000 }} />
-        <Navbar />
-        {children}</body>
+        <GlobalState>
+          <Navbar />
+          {children}
+
+        </GlobalState>
+      </body>
     </html>
   )
 }
